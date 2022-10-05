@@ -1,15 +1,16 @@
 package com.cameron.dungeonrun;
 
-public class Player {
+public class Player implements ICombat {
 
     //Player Variables
     String playerName;
-    private int strength = 0;
-    private int intelligence = 0;
-    private int health = 0;
-    private int experience = 0;
-    private int level = 0;
-    private int baseDamage = 5;
+    private static int strength = 0;
+    private static int intelligence = 0;
+    private static int health = 75;
+    private static int experience = 0;
+    private static int level = 1;
+    private static int baseDamage = 5;
+    private static int agility = 0;
 
 
     //Constructor
@@ -20,13 +21,18 @@ public class Player {
 
     void playerLevelUp (){
         if (experience == 100){
-            System.out.println("Level" + level +1);
+            level += 1;
+            System.out.println("Level " + level);
+            strength += 2;
+            intelligence +=2;
+            agility+=2;
+            experience = 0;
         }
 
     }
 
 
-void currentPlayerStatus(){
+public static void currentPlayerStatus(){
     System.out.println("Current player status");
     System.out.println("---------------------");
     System.out.println("Level: " + level);
@@ -37,8 +43,9 @@ void currentPlayerStatus(){
 
 
 
-
     }
+
+
 
 
 
@@ -68,30 +75,40 @@ void currentPlayerStatus(){
 
         return baseDamage;
     }
+    public int getAgility (){
+        return agility;
+    }
 
     // Setters
     public void setHealth(int newHealth){
-        this.health = newHealth;
+        health = newHealth;
     }
     public void setStrength (int newStrength){
-        this.strength = newStrength;
+        strength = newStrength;
     }
 
     public void setIntelligence (int newIntelligence){
-        this.intelligence = newIntelligence;
+        intelligence = newIntelligence;
     }
      public void setExperience(int newExperience){
-        this.experience = newExperience;
+        experience = newExperience;
      }
      public void setLevel(int newLevel){
-        this.level = newLevel;
+        level = newLevel;
      }
      public void setBaseDamage (int newBaseDamage){
-        this.baseDamage = newBaseDamage;
+        baseDamage = newBaseDamage;
 
+     }
+     public void setAgility(int newAgility){
+        agility = newAgility;
      }
 
 
+    @Override
+    public void fight() {
 
 
+
+    }
 }
