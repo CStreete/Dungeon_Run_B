@@ -2,5 +2,6 @@ package com.cameron.dungeonrun;
 
 public interface ICombat {
 
-    void fight();
+    int fight();
+    int calculateDamage(int strength);
 }
