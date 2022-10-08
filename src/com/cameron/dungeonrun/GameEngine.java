@@ -46,7 +46,7 @@ if (Scan.scanner.hasNext()) {
             case "1" -> {
                 System.out.println("Welcome " + player.playerName);
                 System.out.println("Inside of new Game...");
-                combatSequence();
+                combatSequence(new Monster(),player);
 
 
             }
@@ -61,6 +61,16 @@ if (Scan.scanner.hasNext()) {
             }
             default -> System.out.println("Invalid Selection");
         }
+
+    }
+    public void combatSequence (Monster monster, Player player){
+        boolean isFighting = true;
+        do {
+            player.playerCombatAct();
+        }while (isFighting);
+
+
+
 
     }
 

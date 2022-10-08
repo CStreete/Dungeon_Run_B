@@ -12,7 +12,7 @@ public class Monster implements ICombat{
 
 
 
-
+public Monster (){}
 
     public Monster(String monsterName, int monsterHealth, int monsterDamage) {
         setMonsterName(monsterName);

@@ -15,6 +15,7 @@ public class Player implements ICombat {
     private  int agility = 0;
 
 
+
     //Constructor
     public Player(String playerName) {
         this.playerName = playerName;
@@ -44,8 +45,10 @@ public class Player implements ICombat {
         String userChoice = Scan.scanner.next();
         switch (userChoice) {
             case "1" -> {
-                System.out.println("You did " + calculateDamage(baseDamage) + "Damage to " + killerJakhal.getMonsterName() );
-                System.out.println(killerJakhal.getMonsterName() + " Did");
+                System.out.println("You did " + calculateDamage(baseDamage) + " Damage to " + killerJakhal.getMonsterName() );
+
+                System.out.println(killerJakhal.getMonsterName() + "Did " + killerJakhal.calculateDamage(killerJakhal.getMonsterDamage()) + " Damage");
+                System.out.println(getHealth() - killerJakhal.calculateDamage(killerJakhal.getMonsterDamage()));
 
             }
 
@@ -53,16 +56,8 @@ public class Player implements ICombat {
             case "3" -> System.out.println("showing status.....");
         }
     }
-    public void combatSequence (Monster monster, Player player){
-        boolean isFighting = true;
-        do {
-            player.playerCombatAct();
-        }while (isFighting);
 
 
-
-
-    }
 
     /*public void playerDodge (){
         int randomNumber;
