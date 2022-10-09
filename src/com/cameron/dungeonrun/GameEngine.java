@@ -6,9 +6,13 @@ import java.util.List;
 import static com.cameron.dungeonrun.Colors.*;
 
 public class GameEngine {
+
+
     List<Monster> monsterList = new ArrayList<>();
+    Monster monster = new Monster();
     boolean exit;
     void runMainMenu(){
+
         System.out.printf("""
               %sDungeon Run\s
               A text based MMO\s
@@ -16,7 +20,7 @@ public class GameEngine {
               ===========================
               Enter Player Name:
               """,RED_BOLD_BRIGHT,RESET);
-
+        Player player = new Player(Scan.scanner.next());
 
 if (Scan.scanner.hasNext()) {
 
@@ -38,7 +42,7 @@ if (Scan.scanner.hasNext()) {
     }
 
     void interactiveMenu (){
-        Player player = new Player(Scan.scanner.next());
+        Player player = new Player();
 
 
         String choice = Scan.scanner.next();
@@ -46,13 +50,14 @@ if (Scan.scanner.hasNext()) {
             case "1" -> {
                 System.out.println("Welcome " + player.playerName);
                 System.out.println("Inside of new Game...");
-                combatSequence(new Monster(),player);
+                combatSequence();
 
 
             }
             case "2" -> {
-                currentPlayerStatus(player);
+                player.currentPlayerStatus();
                 System.out.println("Inside Player Status...");
+
 
             }
             case "0" -> {
@@ -63,8 +68,9 @@ if (Scan.scanner.hasNext()) {
         }
 
     }
-    public void combatSequence (Monster monster, Player player){
+    public void combatSequence (){
         boolean isFighting = true;
+        Player player = new Player();
         do {
             player.playerCombatAct();
         }while (isFighting);
@@ -76,18 +82,7 @@ if (Scan.scanner.hasNext()) {
 
 
 
-    public void currentPlayerStatus(Player player){
-        System.out.println("Current player status");
-        System.out.println("---------------------");
-        System.out.println("Level: " + player.getLevel());
-        System.out.println("Health: " + player.getHealth());
-        System.out.println("Strength: " + player.getStrength());
-        System.out.println("Intelligence: " + player.getIntelligence());
-        System.out.println("Experience: " + player.getExperience());
 
-
-
-    }
 
 
     public void addMonsterToList (Monster monster){

@@ -1,9 +1,7 @@
 package com.cameron.dungeonrun;
 
-import java.util.Random;
-
 public class Player implements ICombat {
-
+// Random number for attacks
     //Player Variables
     String playerName;
     private  int strength = 0;
@@ -34,6 +32,18 @@ public class Player implements ICombat {
         }
 
     }
+    public void currentPlayerStatus(){
+        System.out.println("Current player status");
+        System.out.println("---------------------");
+        System.out.println("Level: " + getLevel());
+        System.out.println("Health: " + getHealth());
+        System.out.println("Strength: " + getStrength());
+        System.out.println("Intelligence: " + getIntelligence());
+        System.out.println("Experience: " + getExperience());
+
+
+
+    }
 
 
     public void playerCombatAct (){
@@ -45,17 +55,30 @@ public class Player implements ICombat {
         String userChoice = Scan.scanner.next();
         switch (userChoice) {
             case "1" -> {
-                System.out.println("You did " + calculateDamage(baseDamage) + " Damage to " + killerJakhal.getMonsterName() );
-
-                System.out.println(killerJakhal.getMonsterName() + "Did " + killerJakhal.calculateDamage(killerJakhal.getMonsterDamage()) + " Damage");
-                System.out.println(getHealth() - killerJakhal.calculateDamage(killerJakhal.getMonsterDamage()));
-
+                System.out.println("You did " + fight() + " Damage to " + killerJakhal.getMonsterName() );
+                System.out.println(killerJakhal.getMonsterName() + " Did " + killerJakhal.fight() + " Damage " + " to" + playerName);
+                health -= killerJakhal.fight();
+                int mHealth = killerJakhal.getMonsterHealth();
+                mHealth -= fight();
+                System.out.println("Current Monster Health:" + mHealth);
             }
 
             case "2" -> System.out.println("Fleeing......");
-            case "3" -> System.out.println("showing status.....");
+            case "3" -> {
+                System.out.println("showing status.....");
+                currentPlayerStatus();
+
+                {
+
+
+
+
+                }
+            }
+
         }
-    }
+        }
+
 
 
 
@@ -77,16 +100,15 @@ public class Player implements ICombat {
     @Override
     public int fight() {
 
-        return calculateDamage(strength);
+        return baseDamage + calculateDamage();
     }
 
 
 
     @Override
-    public int calculateDamage(int strength) {
+    public int calculateDamage() {
 
-        baseDamage += (strength * 2 / 4+1);
-        return strength;
+        return (((strength + level) /4) + 1);
     }
 
 

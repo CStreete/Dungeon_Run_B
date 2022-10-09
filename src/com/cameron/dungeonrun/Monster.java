@@ -32,14 +32,13 @@ public Monster (){}
     @Override
     public int fight() {
 
-        return calculateDamage(monsterDamage);
+        return calculateDamage();
     }
 
     @Override
-    public int calculateDamage(int strength) {
+    public int calculateDamage() {
 
-        monsterDamage = strength;
-        return strength;
+        return monsterDamage;
     }
 
 
