@@ -8,12 +8,17 @@ public class ShopItems {
     private String itemName;
     private int itemCost;
     private int itemAttribute;
+    private boolean owned;
 
+    public boolean isOwned() {
+        return owned;
+    }
 
+    public void setOwned(boolean owned) {
+        this.owned = owned;
+    }
 
-
-
-public  ShopItems (){}
+    public  ShopItems (){}
     public ShopItems(String itemName, int itemCost) {
         this.itemName = itemName;
         this.itemCost = itemCost;
@@ -27,6 +32,8 @@ public  ShopItems (){}
                 ", itemAttribute=" + itemAttribute +
                 '}';
     }
+
+
 
     public int getItemAttribute() {
         return itemAttribute;
@@ -51,4 +58,6 @@ public  ShopItems (){}
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
+
+
 }

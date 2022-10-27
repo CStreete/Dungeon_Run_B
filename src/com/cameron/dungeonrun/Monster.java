@@ -15,8 +15,6 @@ public class Monster implements ICombat{
     String monsterName;
     private int monsterHealth;
     private int monsterDamage;
-    private int minionHealth;
-    private int minionDamage;
     private String randomMonsterMessage;
     private String randomMonsterMessage1;
     private String randomMonsterMessage2;
@@ -24,7 +22,10 @@ public class Monster implements ICombat{
 
 
 
-     private  List<String> monsterMessages = new ArrayList<>();
+
+
+
+    private  List<String> monsterMessages = new ArrayList<>();
 
 
 
@@ -57,7 +58,10 @@ public class Monster implements ICombat{
 
  }
 
-
+public void monsterHealth(){
+     if (getMonsterHealth() <= 0)
+         setMonsterHealth(0);
+}
 
 
 
@@ -91,21 +95,17 @@ public Monster (){}
 
     @Override
     public int calculateDamage() {
+     Random random = new Random();
+     int x = random.nextInt(0,getMonsterDamage());
 
-        return monsterDamage;
+        return (getMonsterDamage() + x);
     }
 
 
 
 
 
-    public int getMinionHealth() {
-        return minionHealth;
-    }
 
-    public int getMinionDamage() {
-        return minionDamage;
-    }
 
 
     public String getMonsterName() {
@@ -161,13 +161,5 @@ public Monster (){}
     public void setRandomMonsterMessage3(String randomMonsterMessage3) {
         this.randomMonsterMessage3 = randomMonsterMessage3;
     }
-    public void setMinionDamage(int minionDamage) {
-        this.minionDamage = minionDamage;
-    }
-    public void setMinionHealth(int minionHealth) {
-        this.minionHealth = minionHealth;
-    }
-
-
 
 }

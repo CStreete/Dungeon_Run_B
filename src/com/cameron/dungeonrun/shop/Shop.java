@@ -14,6 +14,7 @@ public class Shop {
 
 
     List<ShopItems> shopItemsList = new ArrayList<>();
+
     ShopItems shopItems;
     BootsOfAgility bootsOfAgility = new BootsOfAgility();
     RangersBow rangersBow = new RangersBow();
@@ -26,11 +27,13 @@ public class Shop {
 
 
 public void startShop(Player player){
-
     GameEngine gameEngine = new GameEngine();
     boolean exit = false;
     createShopItem(bootsOfAgility,rangersBow,dragonmancerChains,healthPotion,dawnBringerDualSwords,angelsAscension);
     shopMessages(player);
+
+
+
 
 
 
@@ -44,99 +47,139 @@ do {
     switch (Scan.scanner.next()) {
 
         case "0":
-            gameEngine.dungeon(player);
+            gameEngine.enterWorld(player);
+
+            exit=true;
             break;
         case "1":
 
-            if (player.getGold() >= shopItemsList.get(0).getItemCost()) {
-                player.setGold(player.getGold() - shopItemsList.get(0).getItemCost());
-                player.setAgility(player.getAgility() + shopItemsList.get(0).getItemAttribute());
-                System.out.println("You have purchased: " +  PURPLE_BOLD_BRIGHT + shopItemsList.get(0).getItemName()+ RESET);
-                System.out.println("Gold: " + player.getGold());
+            if (!checkIfItemIsOwned(player,bootsOfAgility)){
 
+                if (player.getGold() >= shopItemsList.get(0).getItemCost()) {
+                    player.setGold(player.getGold() - shopItemsList.get(0).getItemCost());
+                    player.setAgility(player.getAgility() + shopItemsList.get(0).getItemAttribute());
+                    System.out.println("You have purchased: " + PURPLE_BOLD_BRIGHT + shopItemsList.get(0).getItemName() + RESET);
+                    System.out.println("Gold: " + player.getGold());
+                    addToPlayerItemList(player,shopItemsList.get(0));
 
-            } else {
-                System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                } else {
+                    System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                }
             }
+            else {
+                System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item,try purchasing something else! " + RESET);
+            }
+
             break;
+
+
         case "2":
-            if (player.getGold() >= shopItemsList.get(1).getItemCost()) {
-                player.setGold(player.getGold() - shopItemsList.get(1).getItemCost());
-                player.setAgility(player.getAgility() + (shopItemsList.get(1).getItemAttribute()- 10));
-                player.setStrength(player.getStrength() + shopItemsList.get(1).getItemAttribute() - 15);
-                System.out.println("You have purchased: " + BLUE_BOLD_BRIGHT + shopItemsList.get(1).getItemName()+ RESET);
-                System.out.println("Gold: " + player.getGold());
+              if (!checkIfItemIsOwned(player,rangersBow)){
+
+                if (player.getGold() >= shopItemsList.get(1).getItemCost()) {
+                    player.setGold(player.getGold() - shopItemsList.get(1).getItemCost());
+                    player.setAgility(player.getAgility() + (shopItemsList.get(1).getItemAttribute() - 10));
+                    player.setStrength(player.getStrength() + shopItemsList.get(1).getItemAttribute() - 15);
+                    System.out.println("You have purchased: " + BLUE_BOLD_BRIGHT + shopItemsList.get(1).getItemName() + RESET);
+                    System.out.println("Gold: " + player.getGold());
+                    addToPlayerItemList(player,shopItemsList.get(1));
 
 
-            } else {
-                System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
-            }
+
+                } else {
+                    System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                }
+                 }else {
+                  System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item, try purchasing something else! " + RESET);
+              }
             break;
 
 
         case "3":
+            if (!checkIfItemIsOwned(player,dragonmancerChains)) {
+
             if (player.getGold() >= shopItemsList.get(2).getItemCost()) {
                 player.setGold(player.getGold() - shopItemsList.get(2).getItemCost());
-                player.setAgility(player.getAgility() + (shopItemsList.get(2).getItemAttribute()- 40));
+                player.setAgility(player.getAgility() + (shopItemsList.get(2).getItemAttribute() - 40));
                 player.setStrength(player.getStrength() + (shopItemsList.get(2).getItemAttribute() - 25));
-                player.setHealth(player.getHealth() + (shopItemsList.get(2).getItemAttribute() - 25) );
-                System.out.println("You have purchased: " + RED_BOLD_BRIGHT +  shopItemsList.get(2).getItemName()+ RESET);
+                player.setHealth(player.getHealth() + (shopItemsList.get(2).getItemAttribute() - 25));
+                System.out.println("You have purchased: " + RED_BOLD_BRIGHT + shopItemsList.get(2).getItemName() + RESET);
                 System.out.println("Gold: " + player.getGold());
+                addToPlayerItemList(player,shopItemsList.get(2));
 
             } else {
                 System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
             }
-
+        }else{
+                System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item, try purchasing something else! " + RESET);
+            }
             break;
 
         case "4":
-            if (player.getGold() >= shopItemsList.get(3).getItemCost()) {
-                player.setGold(player.getGold() - shopItemsList.get(3).getItemCost());
-                player.setHealth(player.getHealth() + shopItemsList.get(3).getItemAttribute());
-                System.out.println("You have purchased: "  + GREEN_BOLD_BRIGHT + shopItemsList.get(3).getItemName()+ RESET);
-                System.out.println("Gold: " + player.getGold());
+            if (!checkIfItemIsOwned(player,healthPotion)) {
+                if (player.getGold() >= shopItemsList.get(3).getItemCost()) {
+                    player.setGold(player.getGold() - shopItemsList.get(3).getItemCost());
+                    player.setHealth(player.getHealth() + shopItemsList.get(3).getItemAttribute());
+                    System.out.println("You have purchased: " + GREEN_BOLD_BRIGHT + shopItemsList.get(3).getItemName() + RESET);
+                    System.out.println("Gold: " + player.getGold());
 
 
-            } else {
-                System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                } else {
+                    System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                }
+            }else {
+                System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item, try purchasing something else! " + RESET);
             }
+
             break;
 
 
         case "5":
 
-            if (player.getGold() >= shopItemsList.get(4).getItemCost()) {
-                player.setGold(player.getGold() - shopItemsList.get(4).getItemCost());
-                player.setAgility(player.getAgility() + (shopItemsList.get(4).getItemAttribute()- 65));
-                player.setStrength(player.getStrength() + (shopItemsList.get(4).getItemAttribute() - 55));
-                player.setHealth(player.getHealth() + (shopItemsList.get(4).getItemAttribute() - 55));
-                player.setBaseDamage(player.getBaseDamage() + (shopItemsList.get(4).getItemAttribute() - 65));
-                System.out.println("You have purchased: " + CYAN_BOLD_BRIGHT + shopItemsList.get(4).getItemName()+ RESET );
-                System.out.println("Gold: " + player.getGold());
+            if (!checkIfItemIsOwned(player,dawnBringerDualSwords)) {
+                if (player.getGold() >= shopItemsList.get(4).getItemCost()) {
+                    player.setGold(player.getGold() - shopItemsList.get(4).getItemCost());
+                    player.setAgility(player.getAgility() + (shopItemsList.get(4).getItemAttribute() - 65));
+                    player.setStrength(player.getStrength() + (shopItemsList.get(4).getItemAttribute() - 55));
+                    player.setHealth(player.getHealth() + (shopItemsList.get(4).getItemAttribute() - 55));
+                    player.setBaseDamage(player.getBaseDamage() + (shopItemsList.get(4).getItemAttribute() - 65));
+                    System.out.println("You have purchased: " + CYAN_BOLD_BRIGHT + shopItemsList.get(4).getItemName() + RESET);
+                    System.out.println("Gold: " + player.getGold());
+                    addToPlayerItemList(player,shopItemsList.get(4));
 
-            } else {
-                System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                } else {
+                    System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                }
+            }else {
+                System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item, try purchasing something else! " + RESET);
             }
 
             break;
 
 
         case "6":
-            if (player.getGold() >= shopItemsList.get(5).getItemCost()) {
-                player.setGold(player.getGold() - shopItemsList.get(5).getItemCost());
-                player.setAgility(player.getAgility() + (shopItemsList.get(5).getItemAttribute()- 190));
-                player.setStrength(player.getStrength() + (shopItemsList.get(5).getItemAttribute() - 190));
-                player.setHealth(player.getHealth() + (shopItemsList.get(5).getItemAttribute() - 140));
-                player.setBaseDamage(player.getBaseDamage() + (shopItemsList.get(5).getItemAttribute() - 220));
-                player.setIntelligence(player.getIntelligence() + (shopItemsList.get(5).getItemAttribute() - 220));
-                System.out.println("You have purchased: " +  YELLOW_BOLD_BRIGHT + shopItemsList.get(5).getItemName() + RESET);
-                System.out.println("Gold: " + player.getGold());
+            if (!checkIfItemIsOwned(player,angelsAscension)) {
+                if (player.getGold() >= shopItemsList.get(5).getItemCost()) {
+                    player.setGold(player.getGold() - shopItemsList.get(5).getItemCost());
+                    player.setAgility(player.getAgility() + (shopItemsList.get(5).getItemAttribute() - 190));
+                    player.setStrength(player.getStrength() + (shopItemsList.get(5).getItemAttribute() - 190));
+                    player.setHealth(player.getHealth() + (shopItemsList.get(5).getItemAttribute() - 140));
+                    player.setBaseDamage(player.getBaseDamage() + (shopItemsList.get(5).getItemAttribute() - 220));
+                    player.setIntelligence(player.getIntelligence() + (shopItemsList.get(5).getItemAttribute() - 220));
+                    System.out.println("You have purchased: " + YELLOW_BOLD_BRIGHT + shopItemsList.get(5).getItemName() + RESET);
+                    System.out.println("Gold: " + player.getGold());
+                    addToPlayerItemList(player,shopItemsList.get(5));
 
-            } else {
-                System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                } else {
+                    System.out.println("Shop Merchant: Sorry Traveler, you do not have enough gold");
+                }
+            }else {
+                System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Sorry Traveler, you already own this item, try purchasing something else! " + RESET);
+
             }
-
             break;
+        default:
+            System.out.println(WHITE_BOLD_BRIGHT + "Invalid Input! Please try again: " + RESET);
 
 
     }
@@ -146,7 +189,22 @@ do {
 
 
 
+public boolean checkIfItemIsOwned(Player player, ShopItems shopItems){
 
+  if (player.getPlayerPurchasedItems().contains(shopItems))
+     return true;
+
+  else
+      return false;
+
+
+
+
+
+
+
+
+}
 
 
 
@@ -228,6 +286,15 @@ public void shopMessages (Player player){
 
 
     }
+
+    public void addToPlayerItemList(Player player,ShopItems shopItems){
+    player.getPlayerPurchasedItems().add(shopItems);
+
+
+
+
+    }
+
 
 
 
