@@ -6,6 +6,7 @@ import java.io.IOException;
 public class FileWriter {
 
 
+    // Create File
     public void createFile(Player player){
         File myFile = new File( "playerStats.txt");
 
@@ -21,6 +22,8 @@ public class FileWriter {
         }
 
     }
+
+    // Write to file
     public void writeToFile(Player player){
 
         String b = player.getCharacterClassName();

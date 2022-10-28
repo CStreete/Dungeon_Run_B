@@ -20,34 +20,82 @@ public class Player implements ICombat {
     private  int experience;
     private  int level;
     private  int baseDamage;
+    private int maxHp;
     private  int agility;
     private int gold;
     private int totalMonstersKilled;
 
 
-
+    // List for owned items
     private List<ShopItems> playerPurchasedItems = new ArrayList<>();
 
 
     //Constructor
     public Player (){}
+    public Player(String characterClassName, int strength, int intelligence, int health, int experience, int level, int baseDamage, int maxHp, int agility, int gold) {
+        this.characterClassName = characterClassName;
+        this.strength = strength;
+        this.intelligence = intelligence;
+        this.health = health;
+        this.experience = experience;
+        this.level = level;
+        this.baseDamage = baseDamage;
+        this.maxHp = maxHp;
+        this.agility = agility;
+        this.gold = gold;
+    }
+
+    // Calculate Experience method from krille :)
+    public void calculateExperience(int cheatInputExp)  {
+
+
+        int difference = 100 - getExperience();         // Every 100:th EXP = level up!
+        cheatInputExp -= difference;
+
+        int remainder = cheatInputExp % 100;            // For example 526 cheatInputExp = 26
+        cheatInputExp -= remainder;
 
 
 
-   public void ifPlayerLevelUp(){
-        if (getExperience() >= 100){
-            setLevel(getLevel() + 1);
-            setStrength(getStrength() + 10);
-            setIntelligence(getIntelligence() + 10);
-            setAgility(getAgility() + 10);
-            setExperience(0);
-            setBaseDamage(getBaseDamage() + 10);
-            setGold(getGold() + 10);
-            System.out.println(WHITE_BOLD_BRIGHT + "Level Up! " + "Level: " + getLevel() + RESET);
+
+        // Loop for each 100:th experience IF it's above 100!
+        if ( cheatInputExp >= 100) {
+            for (int i = cheatInputExp; i >= 100; i -= 100) {                           // Loop for each
+                setLevel(getLevel() + 1);
+                setGold(getGold() + 10);// never prints "LEVEL UP"
+            }
         }
+
+        if (getExperience() + (remainder + difference) >= 100) {
+            setExperience(getExperience() + difference);
+            setExperience(getExperience() + remainder);
+
+        } else {
+
+            setExperience(getExperience() + (remainder + difference));
+        }
+    }
+
+    //Player Level up method
+    public void ifPlayerLevelUp(){
+
+
+           if (getExperience() >= 100 ){
+               setLevel(getLevel() + 1);
+               setStrength(getStrength() + 10);
+               setIntelligence(getIntelligence() + 10);
+               setAgility(getAgility() + 10);
+               setExperience(getExperience() - 100);
+               setBaseDamage(getBaseDamage() + 10);
+               setGold(getGold() + 10);
+               System.out.println(WHITE_BOLD_BRIGHT + "Level Up! " + "Level: " + getLevel() + RESET);
+           }
+
 
 
     }
+
+    // Current player status method
     public void currentStatus(){
         System.out.println("--------------------------------------------------------");
         System.out.println( WHITE_BOLD_BRIGHT + "Player " + getCharacterClassName() +" Stats:" + RESET);
@@ -70,7 +118,28 @@ public class Player implements ICombat {
 
     }
 
+    // Write Score when player dies
+    public void WriteScore (Player player){
+        FileWriter fileWriter = new FileWriter();
+        fileWriter.createFile(player);
+        fileWriter.writeToFile(player);
+    }
 
+
+    // Combat Methods
+    @Override
+    public int fight() {
+        Random random = new Random();
+        if (!doubleDamage()) {
+            return baseDamage + calculateDamage() + random.nextInt(1, baseDamage);
+        }else
+            System.out.println(WHITE_BOLD_BRIGHT + "Double Damage!" + RESET);
+        return (baseDamage + calculateDamage() + random.nextInt(1, baseDamage)) *2;
+    }
+    @Override
+    public int calculateDamage() {
+        return (((getStrength() + getAgility()) / 4) + 1);
+    }
     public boolean playerDodge (){
         int randomNumber;
         Random random = new Random();
@@ -83,25 +152,6 @@ public class Player implements ICombat {
         } return true;
 
     }
-
-
-    @Override
-    public int fight() {
-        Random random = new Random();
-        if (!doubleDamage()) {
-            return baseDamage + calculateDamage() + random.nextInt(1, baseDamage);
-        }else
-            System.out.println(WHITE_BOLD_BRIGHT + "Double Damage!" + RESET);
-        return (baseDamage + calculateDamage() + random.nextInt(1, baseDamage)) *2;
-    }
-
-
-    @Override
-    public int calculateDamage() {
-        return (((getStrength() + getAgility()) / 4) + 1);
-    }
-
-
     public boolean doubleDamage(){
         int randomNumber;
         Random random = new Random();
@@ -112,22 +162,6 @@ public class Player implements ICombat {
         else
             return true;
     }
-
-
-public void returnToMenu (Player player){
-        GameEngine gameEngine = new GameEngine();
-        gameEngine.enterWorld(player);
-}
-
-
-  public void WriteScore (Player player){
-        FileWriter fileWriter = new FileWriter();
-        fileWriter.createFile(player);
-        fileWriter.writeToFile(player);
-}
-
-
-
     public void fleeToDungeonMenu(Player player, Monster monster){
         GameEngine gameEngine = new GameEngine();
         if (playerFleeFight() || monster.getMonsterHealth() == 0){
@@ -136,12 +170,10 @@ public void returnToMenu (Player player){
 
         }
         else {
-           System.out.println(WHITE_BOLD_BRIGHT + "You must fight to the death!" + RESET);
+            System.out.println(WHITE_BOLD_BRIGHT + "You must fight to the death!" + RESET);
 
         }
     }
-
-
     public boolean playerFleeFight(){
 
         int randomNumber;
@@ -150,18 +182,65 @@ public void returnToMenu (Player player){
         return randomNumber <= getAgility();
 
     }
-
     public void playerHealth (){
         if (getHealth() <= 0)
             setHealth(0);
     }
 
+    // Method for max health
+    public void playerHealthLimit(){
+
+        if (getHealth() > getMaxHp()){
+            setHealth(getMaxHp());
+        }
 
 
+    }
+
+    // Method for if player is defeated
+    public boolean checkIfPlayerIsDefeated(){
+        if (getHealth() == 0) {
+            return true;
+        }
+        else
+            return false;
+
+    }
+
+    // Create Archer and Duelist
+    public void createArcher (){
+        setHealth(75);
+        setStrength(5);
+        setExperience(0);
+        setLevel(1);
+        setAgility(15);
+        setBaseDamage(5);
+        setIntelligence(10);
+        setMaxHp(250);
+        playerHealthLimit();
+
+    }
+    public void createDuelist(){
+        setHealth(100);
+        setStrength(10);
+        setExperience(0);
+        setLevel(1);
+        setAgility(5);
+        setBaseDamage(5);
+        setIntelligence(5);
+        setMaxHp(400);
+        playerHealthLimit();
+
+
+    }
+
+
+
+
+
+    // Player Combat Act aka the big boy
     public void playerCombatAct (Player player, Monster monster,Dungeon dungeon){
-        boolean isFighting = false;
-
-
+        boolean isFighting = true;
 
         do {
 
@@ -171,30 +250,18 @@ public void returnToMenu (Player player){
                         2) Status\s
                         --------------------------------------------------------""" + RESET);
 
-
-
             String userChoice = scanner.next();
     switch (userChoice) {
 
 
-        case "0":{
-            isFighting = true;
-            fleeToDungeonMenu(player,monster);
-
-        }
-
-
-
-        case "1": {
-
-
-
-
+        case "0":
+           fleeToDungeonMenu(player,monster);
+        case "1":
             if (monster.getMonsterHealth() > 0) {
                 int fightDamage = fight();
                 System.out.println(WHITE_BOLD_BRIGHT + getCharacterClassName() + " did " + RED_BOLD_BRIGHT + fightDamage + RESET + " Damage to " + monster.getMonsterName() + RESET);
                 monster.setMonsterHealth((monster.getMonsterHealth()) - fightDamage);
-                monster.monsterHealth();
+                monster.checkMonsterHealth();
                 System.out.println(RED_BOLD_BRIGHT + "Current Monster Health:" + monster.getMonsterHealth() + RESET);
                 if (monster.getMonsterHealth() > 0) {
 
@@ -205,7 +272,7 @@ public void returnToMenu (Player player){
                         setHealth(getHealth() - monster.fight());
                         playerHealth();
                         System.out.println(GREEN_BOLD_BRIGHT + "Your Health: " + getHealth() + RESET);
-                        if (getHealth() == 0 || getHealth() < 0) {
+                        if (getHealth() == 0 || getHealth() < 0 && checkIfPlayerIsDefeated()) {
                             player.setHealth(0);
                             System.out.println(WHITE_BOLD_BRIGHT + "You have died" + RESET);
                             System.out.println(WHITE_BOLD_BRIGHT + "Thank you for playing!" + RESET);
@@ -216,40 +283,40 @@ public void returnToMenu (Player player){
 
                     System.out.println("--------------------------------------------------------");
                 } else {
-                    isFighting = true;
-                    monster.setMonsterHealth(0);
-                    System.out.println(RED_BOLD_BRIGHT + "You have defeated me...." + RESET);
-                    dungeon.printDungeonChest(player, monster);
-                    System.out.println("--------------------------------------------------------");
-                    System.out.println(WHITE_BOLD_BRIGHT + "Well done " + getCharacterClassName() + RESET);
-                    System.out.println(WHITE_BOLD_BRIGHT + "You received " + dungeon.getDungeonExperience() + " XP" + RESET);
-                    setExperience(getExperience() + dungeon.getDungeonExperience());
-                    ifPlayerLevelUp();
-                    setTotalMonstersKilled(getTotalMonstersKilled() + 1);
-                    //System.out.println(WHITE_BOLD_BRIGHT + "You have left " + dungeon.getDungeonName() + RESET);
 
-
-
+                    if (monster.monsterName.contains("Boss")) {
+                        monster.setMonsterHealth(0);
+                        System.out.println(RED_BOLD_BRIGHT + "You have defeated me...." + RESET);
+                        dungeon.printDungeonChest(player, monster);
+                        System.out.println("--------------------------------------------------------");
+                        System.out.println(WHITE_BOLD_BRIGHT + "Well done " + getCharacterClassName() + RESET);
+                        calculateExperience(dungeon.getDungeonExperience());
+                        System.out.println(WHITE_BOLD_BRIGHT + "You received " + dungeon.getDungeonExperience() + " XP" + RESET);
+                        System.out.println(WHITE_BOLD_BRIGHT + "You can leave the dungeon" + RESET);
+                        ifPlayerLevelUp();
+                        setTotalMonstersKilled(getTotalMonstersKilled() + 1);
+                    }
+                    else {
+                        System.out.println(RED_BOLD_BRIGHT + "You have defeated me...." + RESET);
+                        dungeon.printDungeonChest(player, monster);
+                        System.out.println("--------------------------------------------------------");
+                        isFighting = false;
+                    }
                 }
             }else {
                 System.out.println("The Monster is dead");
 
-            }
         }
         break;
 
 
-        case "2": {
+        case "2":
             currentStatus();
             break;
-        }
-
         default:
             System.out.println(WHITE_BOLD_BRIGHT + "Invalid Input! Please try again: " + RESET);
     }
-
-    }while (!isFighting);
-
+    }while (isFighting);
     }
 
 
@@ -257,29 +324,12 @@ public void returnToMenu (Player player){
 
 
 
-public void createArcher (Player player){
-        setHealth(75);
-        setStrength(5);
-        setExperience(0);
-        setLevel(1);
-        setAgility(15);
-        setBaseDamage(5);
-        setIntelligence(10);
 
-}
-public void createDuelist(Player player){
-    setHealth(100);
-    setStrength(10);
-    setExperience(0);
-    setLevel(1);
-    setAgility(5);
-    setBaseDamage(5);
-    setIntelligence(5);
-
-
-}
 
     //Getters
+    public int getMaxHp() {
+          return maxHp;
+      }
     public List<ShopItems> getPlayerPurchasedItems() {
         return playerPurchasedItems;
     }
@@ -320,6 +370,10 @@ public void createDuelist(Player player){
 
 
     // Setters
+
+    public void setMaxHp(int maxHp) {
+          this.maxHp = maxHp;
+        }
     public void setHealth(int newHealth){
         this.health = newHealth;
     }
@@ -341,7 +395,7 @@ public void createDuelist(Player player){
      public void setAgility(int agility){
         this.agility = agility;
      }
-    public void setCharacterClassName(String characterClassName) {
+     public void setCharacterClassName(String characterClassName) {
         this.characterClassName = characterClassName;
     }
     public void setGold(int gold) {
@@ -354,6 +408,7 @@ public void createDuelist(Player player){
         this.playerPurchasedItems = playerPurchasedItems;
     }
 
+    // To String
     @Override
     public String toString() {
         return "Player{" +

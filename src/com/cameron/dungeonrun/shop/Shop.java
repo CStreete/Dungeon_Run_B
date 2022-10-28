@@ -4,7 +4,6 @@ import com.cameron.dungeonrun.GameEngine;
 import com.cameron.dungeonrun.Player;
 import com.cameron.dungeonrun.Scan;
 import com.cameron.dungeonrun.shop.shopItems.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,10 @@ import static com.cameron.dungeonrun.Colors.*;
 public class Shop {
 
 
+    // Shop item list
     List<ShopItems> shopItemsList = new ArrayList<>();
 
+    // Instantiation
     ShopItems shopItems;
     BootsOfAgility bootsOfAgility = new BootsOfAgility();
     RangersBow rangersBow = new RangersBow();
@@ -25,24 +26,17 @@ public class Shop {
 
 
 
+    // Shop menu
+    public void startShop(Player player){
 
-public void startShop(Player player){
     GameEngine gameEngine = new GameEngine();
     boolean exit = false;
     createShopItem(bootsOfAgility,rangersBow,dragonmancerChains,healthPotion,dawnBringerDualSwords,angelsAscension);
     shopMessages(player);
 
-
-
-
-
-
-
-do {
-
+    do {
 
     System.out.println( WHITE_BOLD_BRIGHT + "0) Leave Shop" + "\nEnter your choice: " );
-
 
     switch (Scan.scanner.next()) {
 
@@ -188,27 +182,20 @@ do {
 
 
 
+    // Check if item is already owned
+    public boolean checkIfItemIsOwned(Player player, ShopItems shopItems){
 
-public boolean checkIfItemIsOwned(Player player, ShopItems shopItems){
+        if (player.getPlayerPurchasedItems().contains(shopItems))
+            return true;
 
-  if (player.getPlayerPurchasedItems().contains(shopItems))
-     return true;
+        else
+            return false;
 
-  else
-      return false;
-
-
-
-
+    }
 
 
-
-
-}
-
-
-
-public void shopMessages (Player player){
+    // Souts for shop menu
+    public void shopMessages (Player player){
     System.out.println(WHITE_BOLD_BRIGHT + "Shop Merchant: Welcome Traveler!");
     System.out.println(WHITE_BOLD_BRIGHT + "What would you like to purchase?");
     System.out.println("Your current Gold: " + player.getGold());
@@ -234,7 +221,7 @@ public void shopMessages (Player player){
 
 
 
-
+    // Create Items for shop
     public void createShopItem(BootsOfAgility bootsOfAgility, RangersBow rangersBow,
                                DragonmancerChains dragonmancerChains,HealthPotion healthPotion,
                                DawnBringerDualSwords dawnBringerDualSwords,AngelsAscension angelsAscension){
@@ -276,17 +263,14 @@ public void shopMessages (Player player){
     addItemToList(angelsAscension);
     }
     
-
-
-
-
-
+    // Add to shop items list
     public void addItemToList(ShopItems shopItems){
      shopItemsList.add(shopItems);
 
 
     }
 
+    // Add to player items list
     public void addToPlayerItemList(Player player,ShopItems shopItems){
     player.getPlayerPurchasedItems().add(shopItems);
 
